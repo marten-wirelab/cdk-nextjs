@@ -6,6 +6,9 @@ FROM $BUILDER_IMAGE_ALIAS AS builder
 FROM public.ecr.aws/lambda/nodejs:22 AS runner
 # do not set WORKDIR b/c it's configured by public.ecr.aws/lambda/nodejs:22 to be /var/task for lambda to run
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 ARG RELATIVE_PATH_TO_PACKAGE
 ARG PUBLIC_PATH
 COPY --from=builder --chown=nextjs:nodejs /app/$RELATIVE_PATH_TO_PACKAGE/$PUBLIC_PATH /app/$PUBLIC_PATH
